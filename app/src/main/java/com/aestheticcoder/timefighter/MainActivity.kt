@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.PersistableBundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -73,6 +76,8 @@ class MainActivity : AppCompatActivity() {
 
         // When the user clicks the tap me button the score increases by one
         tapMeButton.setOnClickListener {view ->
+            val bounceAnimation = AnimationUtils.loadAnimation(this, R.anim.bounce)
+            view.startAnimation(bounceAnimation)
             // Function call for increasing the score
             increaseScore()
         }
@@ -89,6 +94,22 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        super.onCreateOptionsMenu(menu)
+        menuInflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.actionAbout){
+            showInfo()
+        }
+        return true
+    }
+
+    private fun showInfo() {
+        TODO("Not yet implemented")
+    }
     /*
      This function saves the state of our variables that we can pass into
      newly created activity. So that we don't lose our data. This function
@@ -177,6 +198,9 @@ class MainActivity : AppCompatActivity() {
         // The newScore string will be assigned to the yourScoreTextView and it will
         // show the message
         yourScoreTextView.text = newScore
+
+        val blinkAnimation = AnimationUtils.loadAnimation(this, R.anim.blink)
+        yourScoreTextView.startAnimation(blinkAnimation)
     }
 
     // This function starts the countdown timer and sets the gameStarted flag to true
