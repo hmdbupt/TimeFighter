@@ -71,13 +71,21 @@ class MainActivity : AppCompatActivity() {
         timeLeftTextView.text = getString(R.string.time_left, 0)
         */
 
-        // Sets everything to initial settings when the application launches
-        resetGame()
-
         // When the user clicks the tap me button the score increases by one
         tapMeButton.setOnClickListener {view ->
             // Function call for increasing the score
             increaseScore()
+        }
+
+        // Sets everything to initial settings when the application launches
+        //resetGame()
+
+        if (savedInstanceState != null){
+            score = savedInstanceState.getInt(SCORE_KEY)
+            timeLeftOnTimer = savedInstanceState.getLong(TIME_LEFT_KEY)
+            restoreGame()
+        }else{
+            resetGame()
         }
     }
 
@@ -130,6 +138,27 @@ class MainActivity : AppCompatActivity() {
         }
         gameStarted = false
     }
+
+    private fun restoreGame(){
+        yourScoreTextView.text = getString(R.string.your_score, score)
+        val restoredTime = timeLeftOnTimer / 1000
+        timeLeftTextView.text = getString(R.string.time_left, restoredTime)
+
+        countDownTimer = object: CountDownTimer(timeLeftOnTimer, countDownInterval){
+            override fun onTick(millisUntilFinished: Long) {
+                timeLeftOnTimer = millisUntilFinished
+                val timeLeft = millisUntilFinished / 1000
+                timeLeftTextView.text = getString(R.string.time_left, timeLeft)
+            }
+            override fun onFinish(){
+                endGame()
+            }
+        }
+
+        countDownTimer.start()
+        gameStarted = true
+    }
+
 
 
     private fun increaseScore() {
